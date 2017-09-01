@@ -1,0 +1,1 @@
+INSERT INTO `client` (`id`, `name`) VALUES (NULL, 'Oksana'), (NULL, 'Petro'), (NULL, 'Maria'), (NULL, 'Tania'), (NULL, 'Volodymyr');

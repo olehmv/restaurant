@@ -1,0 +1,1 @@
+INSERT INTO `menu` (`id`, `description`) VALUES (NULL, 'Restaurant Menu ');

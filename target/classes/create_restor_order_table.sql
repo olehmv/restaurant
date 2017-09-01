@@ -1,0 +1,1 @@
+CREATE TABLE `restoran`.`restor_order` ( `id` INT NOT NULL AUTO_INCREMENT , `description` VARCHAR(5000) NULL , `price` INT NOT NULL , `admin_id` INT NOT NULL ,`client_id` INT NOT NULL , `active` BOOLEAN NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB

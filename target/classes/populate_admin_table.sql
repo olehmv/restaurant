@@ -1,0 +1,1 @@
+INSERT INTO `admin` (`id`, `name`) VALUES (NULL, 'Oleh'), (NULL, 'Ivan')
