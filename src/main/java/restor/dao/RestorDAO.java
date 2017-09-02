@@ -4,9 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 
 public abstract class RestorDAO<T> {
-	static Connection con;
-	static PreparedStatement ps;
-
+	protected static Connection con;
+	protected static PreparedStatement ps;
+	
 	public T save(T dto) {
 
 		return insert(dto);

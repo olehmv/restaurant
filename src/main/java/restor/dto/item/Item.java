@@ -1,6 +1,9 @@
 package restor.dto.item;
 
-public abstract class Item implements IPrice{
+import org.springframework.stereotype.Component;
+
+@Component
+public  class Item implements IPrice{
 	protected int id;
 	protected int order_id;
 	protected int menu_id;
@@ -51,6 +54,11 @@ public abstract class Item implements IPrice{
 	public String toString() {
 		return "Item [id=" + id + ", order_id=" + order_id + ", menu_id=" + menu_id + ", description=" + description
 				+ ", price=" + price + "]";
+	}
+
+	@Override
+	public double price() {
+		return price;
 	}
 
 

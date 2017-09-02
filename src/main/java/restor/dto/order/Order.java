@@ -2,9 +2,11 @@ package restor.dto.order;
 
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import restor.dto.admin.IProcess;
 import restor.dto.item.Item;
-
+@Component
 public class Order implements IProcess {
 
 	private int id;

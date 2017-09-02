@@ -2,13 +2,15 @@ package restor.dto.client;
 
 import java.util.List;
 
-import restor.dto.order.Order;
+import org.springframework.stereotype.Component;
 
-public abstract class Client {
+import restor.dto.order.Order;
+@Component
+public  class Client {
 	private int id;
-	protected String name;
-	protected List<Order> orders;
-	protected Order order;
+	private String name;
+	private List<Order> orders;
+	private Order order;
 
 	public String getName() {
 		return name;
