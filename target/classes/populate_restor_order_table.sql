@@ -1,1 +1,0 @@
-INSERT INTO `restor_order` (`id`, `description`, `price`, `admin_id`, `client_id`, `active`) VALUES (NULL, 'Holubtsi ', '50.00', '1', '1', '1'), (NULL, ' Varenyky', '40.00', '1', '2', '1'), (NULL, ' Borshch', '30.00', '1', '3', '1'), (NULL, ' Deruny', '50.00', '1', '4', '1'), (NULL, ' Shashlyk', '70.00', '1', '5', '1')

@@ -21,27 +21,6 @@ public class ClientJdbcDAO extends RestorDAO<Client> implements IClientDAO {
 	private List<Client> clients;
 	private Client client;
 
-	public static void main(String[] args) {
-		try {
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			String url = "jdbc:mysql://localhost/restaurant";
-			con = DriverManager.getConnection(url, "root", "");
-			IClientDAO dao = new ClientJdbcDAO();
-			Client c = dao.fetchClient(1);
-			System.out.println(c);
-			List<Client> cs = dao.fetchClients();
-			System.out.println(cs);
-			con.close();
-		} catch (ClassNotFoundException ex) {
-			System.err.println(ex.getMessage());
-		} catch (IllegalAccessException ex) {
-			System.err.println(ex.getMessage());
-		} catch (InstantiationException ex) {
-			System.err.println(ex.getMessage());
-		} catch (SQLException ex) {
-			System.err.println(ex.getMessage());
-		}
-	}
 
 	@Override
 	public Client insert(Client dto) {

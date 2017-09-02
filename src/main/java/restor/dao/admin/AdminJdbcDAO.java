@@ -23,27 +23,27 @@ public class AdminJdbcDAO extends RestorDAO<Admin> implements IAdminDAO {
 	// delete static after test
 	private static Admin admin;
 
-	public static void main(String[] args) {
-		try {
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			String url = "jdbc:mysql://localhost/restaurant";
-			con = DriverManager.getConnection(url, "root", "");
-			IAdminDAO dao = new AdminJdbcDAO();
-			Admin a = dao.fetchAdmin(1);
-			System.out.println(a);
-			List<Admin> adms = dao.fetchAdmins();
-			System.out.println(adms);
-			con.close();
-		} catch (ClassNotFoundException ex) {
-			System.err.println(ex.getMessage());
-		} catch (IllegalAccessException ex) {
-			System.err.println(ex.getMessage());
-		} catch (InstantiationException ex) {
-			System.err.println(ex.getMessage());
-		} catch (SQLException ex) {
-			System.err.println(ex.getMessage());
-		}
-	}
+//	public static void main(String[] args) {
+//		try {
+//			Class.forName("com.mysql.jdbc.Driver").newInstance();
+//			String url = "jdbc:mysql://localhost/restaurant";
+//			con = DriverManager.getConnection(url, "root", "");
+//			IAdminDAO dao = new AdminJdbcDAO();
+//			Admin a = dao.fetchAdmin(1);
+//			System.out.println(a);
+//			List<Admin> adms = dao.fetchAdmins();
+//			System.out.println(adms);
+//			con.close();
+//		} catch (ClassNotFoundException ex) {
+//			System.err.println(ex.getMessage());
+//		} catch (IllegalAccessException ex) {
+//			System.err.println(ex.getMessage());
+//		} catch (InstantiationException ex) {
+//			System.err.println(ex.getMessage());
+//		} catch (SQLException ex) {
+//			System.err.println(ex.getMessage());
+//		}
+//	}
 
 	@Override
 	public Admin update(Admin dto) {

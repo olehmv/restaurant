@@ -13,6 +13,7 @@ import restor.dao.RestorDAO;
 import restor.dto.item.Item;
 import restor.dto.item.MenuItem;
 import restor.dto.menu.Menu;
+
 @Component
 public class MenuJdbcDAO extends RestorDAO<Menu> implements IMenuDAO {
 	private String insert = "insert into menu (description) values(?)";
@@ -21,33 +22,7 @@ public class MenuJdbcDAO extends RestorDAO<Menu> implements IMenuDAO {
 	private String fetchMenus = "select * from menu";
 	private String fetchMenu = "select * from menu where id=?";
 	private Menu menu;
-	private List<Menu>menus;
-	public static void main(String[] args) {
-		try {
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			String url = "jdbc:mysql://localhost/restaurant";
-			con = DriverManager.getConnection(url, "root", "");
-			Menu admin = new Menu();
-			admin.setDescription("oleg");
-			IMenuDAO dao = new MenuJdbcDAO();
-			Menu save = dao.save(admin);
-			System.out.println(save);
-			admin.setDescription("Petro");
-			Menu update = dao.update(admin);
-			System.out.println(update);
-			Menu delete = dao.delete(admin);
-			System.out.println(delete);
-			con.close();
-		} catch (ClassNotFoundException ex) {
-			System.err.println(ex.getMessage());
-		} catch (IllegalAccessException ex) {
-			System.err.println(ex.getMessage());
-		} catch (InstantiationException ex) {
-			System.err.println(ex.getMessage());
-		} catch (SQLException ex) {
-			System.err.println(ex.getMessage());
-		}
-	}
+	private List<Menu> menus;
 
 	@Override
 	public Menu update(Menu dto) {
@@ -108,21 +83,19 @@ public class MenuJdbcDAO extends RestorDAO<Menu> implements IMenuDAO {
 		return dto;
 	}
 
-	
-
 	@Override
 	public Menu fetchMenu(int dto_id) {
 		try {
 			ps = con.prepareStatement(fetchMenu);
 			ps.setInt(1, dto_id);
 			ResultSet rs = ps.executeQuery();
-			menus=new ArrayList<>();
-			while(rs.next()){
-			int id = rs.getInt(1);
-			String description = rs.getString(2);
-			menu=new Menu();
-			menu.setDescription(description);
-			menu.setId(id);
+			menus = new ArrayList<>();
+			while (rs.next()) {
+				int id = rs.getInt(1);
+				String description = rs.getString(2);
+				menu = new Menu();
+				menu.setDescription(description);
+				menu.setId(id);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -135,14 +108,14 @@ public class MenuJdbcDAO extends RestorDAO<Menu> implements IMenuDAO {
 		try {
 			ps = con.prepareStatement(fetchMenus);
 			ResultSet rs = ps.executeQuery();
-			menus=new ArrayList<>();
-			while(rs.next()){
-			int id = rs.getInt(1);
-			String description = rs.getString(2);
-			menu=new Menu();
-			menu.setDescription(description);
-			menu.setId(id);
-			menus.add(menu);
+			menus = new ArrayList<>();
+			while (rs.next()) {
+				int id = rs.getInt(1);
+				String description = rs.getString(2);
+				menu = new Menu();
+				menu.setDescription(description);
+				menu.setId(id);
+				menus.add(menu);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

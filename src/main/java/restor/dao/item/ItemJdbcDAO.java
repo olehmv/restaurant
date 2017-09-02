@@ -13,6 +13,7 @@ import restor.dao.RestorDAO;
 import restor.dto.item.Item;
 import restor.dto.item.MenuItem;
 import restor.dto.item.OrderItem;
+
 @Component
 public class ItemJdbcDAO extends RestorDAO<Item> implements IItemDAO {
 	private String insert = "insert into item (menu_id,order_id,description,price)values(?,?,?,?)";
@@ -24,32 +25,7 @@ public class ItemJdbcDAO extends RestorDAO<Item> implements IItemDAO {
 	private String fetchOrderItems = "select * from item where order_id=?";
 
 	private List<Item> items;
-	private Item item; 
-	public static void main(String[] args) {
-		try {
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			String url = "jdbc:mysql://localhost/restaurant";
-			con = DriverManager.getConnection(url, "root", "");
-			IItemDAO dao = new ItemJdbcDAO();
-			Item i = dao.fetchItem(1);
-			System.out.println(i+"\n");
-			List<Item> is = dao.fetchItems();
-			System.out.println(is+"\n");
-			List<Item> mis = dao.fetchMenuItems(1);
-			System.out.println(mis+"\n");
-			List<Item> ois = dao.fetchOrderItems(1);
-			System.out.println(ois);
-			con.close();
-		} catch (ClassNotFoundException ex) {
-			System.err.println(ex.getMessage());
-		} catch (IllegalAccessException ex) {
-			System.err.println(ex.getMessage());
-		} catch (InstantiationException ex) {
-			System.err.println(ex.getMessage());
-		} catch (SQLException ex) {
-			System.err.println(ex.getMessage());
-		}
-	}
+	private Item item;
 
 	@Override
 	public Item update(Item dto) {
@@ -120,20 +96,20 @@ public class ItemJdbcDAO extends RestorDAO<Item> implements IItemDAO {
 		try {
 			ps = con.prepareStatement(fetchItems);
 			ResultSet rs = ps.executeQuery();
-			items=new ArrayList<>();
-			while(rs.next()){
-			int id = rs.getInt(1);
-			int menu_id = rs.getInt(2);
-			int order_id = rs.getInt(3);
-			String description = rs.getString(4);
-			double price= rs.getDouble(5);
-			item=new OrderItem();
-			item.setDescription(description);
-			item.setId(id);
-			item.setMenu_id(menu_id);
-			item.setOrder_id(order_id);
-			item.setPrice(price);
-			items.add(item);
+			items = new ArrayList<>();
+			while (rs.next()) {
+				int id = rs.getInt(1);
+				int menu_id = rs.getInt(2);
+				int order_id = rs.getInt(3);
+				String description = rs.getString(4);
+				double price = rs.getDouble(5);
+				item = new OrderItem();
+				item.setDescription(description);
+				item.setId(id);
+				item.setMenu_id(menu_id);
+				item.setOrder_id(order_id);
+				item.setPrice(price);
+				items.add(item);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -147,20 +123,20 @@ public class ItemJdbcDAO extends RestorDAO<Item> implements IItemDAO {
 			ps = con.prepareStatement(fetchOrderItems);
 			ps.setInt(1, dto_id);
 			ResultSet rs = ps.executeQuery();
-			items=new ArrayList<>();
-			while(rs.next()){
-			int id = rs.getInt(1);
-			int menu_id = rs.getInt(2);
-			int order_id = rs.getInt(3);
-			String description = rs.getString(4);
-			double price= rs.getDouble(5);
-			item=new OrderItem();
-			item.setDescription(description);
-			item.setId(id);
-			item.setMenu_id(menu_id);
-			item.setOrder_id(order_id);
-			item.setPrice(price);
-			items.add(item);
+			items = new ArrayList<>();
+			while (rs.next()) {
+				int id = rs.getInt(1);
+				int menu_id = rs.getInt(2);
+				int order_id = rs.getInt(3);
+				String description = rs.getString(4);
+				double price = rs.getDouble(5);
+				item = new OrderItem();
+				item.setDescription(description);
+				item.setId(id);
+				item.setMenu_id(menu_id);
+				item.setOrder_id(order_id);
+				item.setPrice(price);
+				items.add(item);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -174,20 +150,20 @@ public class ItemJdbcDAO extends RestorDAO<Item> implements IItemDAO {
 			ps = con.prepareStatement(fetchMenuItems);
 			ps.setInt(1, dto_id);
 			ResultSet rs = ps.executeQuery();
-			items=new ArrayList<>();
-			while(rs.next()){
-			int id = rs.getInt(1);
-			int menu_id = rs.getInt(2);
-			int order_id = rs.getInt(3);
-			String description = rs.getString(4);
-			double price= rs.getDouble(5);
-			item=new MenuItem();
-			item.setDescription(description);
-			item.setId(id);
-			item.setMenu_id(menu_id);
-			item.setOrder_id(order_id);
-			item.setPrice(price);
-			items.add(item);
+			items = new ArrayList<>();
+			while (rs.next()) {
+				int id = rs.getInt(1);
+				int menu_id = rs.getInt(2);
+				int order_id = rs.getInt(3);
+				String description = rs.getString(4);
+				double price = rs.getDouble(5);
+				item = new MenuItem();
+				item.setDescription(description);
+				item.setId(id);
+				item.setMenu_id(menu_id);
+				item.setOrder_id(order_id);
+				item.setPrice(price);
+				items.add(item);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -201,19 +177,19 @@ public class ItemJdbcDAO extends RestorDAO<Item> implements IItemDAO {
 			ps = con.prepareStatement(fetchItem);
 			ps.setInt(1, dto_id);
 			ResultSet rs = ps.executeQuery();
-			items=new ArrayList<>();
-			while(rs.next()){
-			int id = rs.getInt(1);
-			int menu_id = rs.getInt(2);
-			int order_id = rs.getInt(3);
-			String description = rs.getString(4);
-			double price= rs.getDouble(5);
-			item=new Item();
-			item.setDescription(description);
-			item.setId(id);
-			item.setMenu_id(menu_id);
-			item.setOrder_id(order_id);
-			item.setPrice(price);
+			items = new ArrayList<>();
+			while (rs.next()) {
+				int id = rs.getInt(1);
+				int menu_id = rs.getInt(2);
+				int order_id = rs.getInt(3);
+				String description = rs.getString(4);
+				double price = rs.getDouble(5);
+				item = new Item();
+				item.setDescription(description);
+				item.setId(id);
+				item.setMenu_id(menu_id);
+				item.setOrder_id(order_id);
+				item.setPrice(price);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

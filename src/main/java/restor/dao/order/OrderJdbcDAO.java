@@ -13,6 +13,7 @@ import restor.dao.RestorDAO;
 import restor.dto.item.Item;
 import restor.dto.item.OrderItem;
 import restor.dto.order.Order;
+
 @Component
 public class OrderJdbcDAO extends RestorDAO<Order> implements IOderDAO {
 	private String insert = "insert into restor_order (description,price,admin_id,client_id,active) values(?,?,?,?,?)";
@@ -20,32 +21,9 @@ public class OrderJdbcDAO extends RestorDAO<Order> implements IOderDAO {
 	private String delete = "delete from restor_order where id=?";
 	private String fetchOrders = "select * from restor_order";
 	private String fetchOrder = "select * from restor_order where id=?";
-	private List<Order>orders;
+	private List<Order> orders;
 	private Order order;
-	public static void main(String[] args) {
-		try {
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			String url = "jdbc:mysql://localhost/restaurant";
-			con = DriverManager.getConnection(url, "root", "");
-		
-			IOderDAO dao = new OrderJdbcDAO();
-			List<Order> os = dao.fetchOrders();
-			System.out.println(os+"\n");
-			Order o = dao.fetchOrder(1);
-			System.out.println(o);
 
-			con.close();
-		} catch (ClassNotFoundException ex) {
-			System.err.println(ex.getMessage());
-		} catch (IllegalAccessException ex) {
-			System.err.println(ex.getMessage());
-		} catch (InstantiationException ex) {
-			System.err.println(ex.getMessage());
-		} catch (SQLException ex) {
-			System.err.println(ex.getMessage());
-		}
-	}
-	
 	@Override
 	public Order update(Order dto) {
 		try {
@@ -96,7 +74,6 @@ public class OrderJdbcDAO extends RestorDAO<Order> implements IOderDAO {
 			ps.setInt(4, dto.getClient_id());
 			ps.setBoolean(5, dto.isActive());
 
-
 			ResultSet rs = ps.getGeneratedKeys();
 
 			int i = ps.executeUpdate();
@@ -120,22 +97,22 @@ public class OrderJdbcDAO extends RestorDAO<Order> implements IOderDAO {
 		try {
 			ps = con.prepareStatement(fetchOrders);
 			ResultSet rs = ps.executeQuery();
-			orders=new ArrayList<>();
-			while(rs.next()){
-			int id = rs.getInt(1);
-			String description = rs.getString(2);
-			double price = rs.getDouble(3);
-			int admin_id = rs.getInt(4);
-			int client_id= rs.getInt(5);
-			boolean active = rs.getBoolean(6);
-			order=new Order();
-			order.setId(id);
-			order.setDescription(description);
-			order.setPrice(price);
-			order.setAdmin_id(admin_id);
-			order.setClient_id(client_id);
-			order.setActive(active);
-			orders.add(order);
+			orders = new ArrayList<>();
+			while (rs.next()) {
+				int id = rs.getInt(1);
+				String description = rs.getString(2);
+				double price = rs.getDouble(3);
+				int admin_id = rs.getInt(4);
+				int client_id = rs.getInt(5);
+				boolean active = rs.getBoolean(6);
+				order = new Order();
+				order.setId(id);
+				order.setDescription(description);
+				order.setPrice(price);
+				order.setAdmin_id(admin_id);
+				order.setClient_id(client_id);
+				order.setActive(active);
+				orders.add(order);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -149,22 +126,22 @@ public class OrderJdbcDAO extends RestorDAO<Order> implements IOderDAO {
 			ps = con.prepareStatement(fetchOrder);
 			ps.setInt(1, dto_id);
 			ResultSet rs = ps.executeQuery();
-			orders=new ArrayList<>();
-			while(rs.next()){
-			int id = rs.getInt(1);
-			String description = rs.getString(2);
-			double price = rs.getDouble(3);
-			int admin_id = rs.getInt(4);
-			int client_id= rs.getInt(5);
-			boolean active = rs.getBoolean(6);
-			order=new Order();
-			order.setId(id);
-			order.setDescription(description);
-			order.setPrice(price);
-			order.setAdmin_id(admin_id);
-			order.setClient_id(client_id);
-			order.setActive(active);
-			orders.add(order);
+			orders = new ArrayList<>();
+			while (rs.next()) {
+				int id = rs.getInt(1);
+				String description = rs.getString(2);
+				double price = rs.getDouble(3);
+				int admin_id = rs.getInt(4);
+				int client_id = rs.getInt(5);
+				boolean active = rs.getBoolean(6);
+				order = new Order();
+				order.setId(id);
+				order.setDescription(description);
+				order.setPrice(price);
+				order.setAdmin_id(admin_id);
+				order.setClient_id(client_id);
+				order.setActive(active);
+				orders.add(order);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -172,7 +149,4 @@ public class OrderJdbcDAO extends RestorDAO<Order> implements IOderDAO {
 		return order;
 	}
 
-	
-
-	
 }
