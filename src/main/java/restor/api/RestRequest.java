@@ -14,7 +14,7 @@ import restor.service.menu.IMenuService;
 import restor.service.order.IOrderService;
 
 class RestRequest {
-	private Pattern menus = Pattern.compile("/menus");
+	private Pattern menus  = Pattern.compile("/menus");
 	private Pattern menu = Pattern.compile("/menus/([0-9])");
 	private Pattern items = Pattern.compile("/items");
 	private Pattern item = Pattern.compile("/items/([0-9])");
