@@ -317,8 +317,8 @@ public class RestorRestController {
 		if (entity == null) {
 			throw new OrderNotFoundException();
 		}
-		entity = orderService.updateOrder(dto);
-		return entity;
+		orderService.updateOrder(dto);
+		return orderService.fetchOrder(dto_id);
 	}
 
 	

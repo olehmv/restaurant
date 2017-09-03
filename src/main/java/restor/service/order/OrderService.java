@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import restor.dao.item.IItemDAO;
 import restor.dao.order.IOrderDAO;
+import restor.dto.item.Item;
 import restor.dto.order.Order;
 
 @Component
@@ -18,24 +19,49 @@ public class OrderService implements IOrderService {
 
 	@Override
 	public Order addOrder(Order dto) {
-		return orderDao.save(dto);
+		List<Item> items = dto.getOrderItems();
+		dto = orderDao.save(dto);
+		for (Item item : items) {
+			item.setOrder_id(dto.getId());
+			item = itemDao.save(item);
+		}
+		dto.setOrderItems(items);
+		return dto;
 	}
 
 	@Override
 	public Order updateOrder(Order dto) {
-		return orderDao.update(dto);
+			List<Item> items = dto.getOrderItems();
+			dto = orderDao.update(dto);
+			for (Item item : items) {
+				item.setOrder_id(dto.getId());
+				if (isItemNew(item)) {
+					item = itemDao.save(item);
+				} else {
+					item = itemDao.update(item);
+				}
+			}
+			dto.setOrderItems(items);
+		return dto;
 	}
 
 	@Override
 	public Order deleteOrder(Order dto) {
-		return orderDao.delete(dto);
+		List<Item> items = dto.getOrderItems();
+		orderDao.delete(dto);
+		for (Item item : items) {
+			itemDao.delete(item);
+		}
+		return dto;
 	}
 
 	@Override
 	public Order fetchOrder(int dto_id) {
-		Order order = orderDao.fetchOrder(dto_id);
-		order.setOrderItems(itemDao.fetchOrderItems(dto_id));
-		return  order;   
+		Order dto = orderDao.fetchOrder(dto_id);
+		if (dto == null)
+			return dto;
+		dto.setOrderItems(itemDao.fetchOrderItems(dto_id));
+		return dto;
 	}
 
 	@Override
@@ -47,4 +73,12 @@ public class OrderService implements IOrderService {
 		return orders;
 	}
 
+	private boolean isItemNew(Item item) {
+		Item fetchItem = itemDao.fetchItem(item.getId());
+		if (fetchItem == null)
+			return true;
+		if (!fetchItem.equals(item))
+			return true;
+		return false;
+	}
 }
