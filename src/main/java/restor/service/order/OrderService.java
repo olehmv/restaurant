@@ -35,7 +35,7 @@ public class OrderService implements IOrderService {
 	public Order fetchOrder(int dto_id) {
 		Order order = orderDao.fetchOrder(dto_id);
 		order.setOrderItems(itemDao.fetchOrderItems(dto_id));
-		return order;
+		return  order;   
 	}
 
 	@Override
