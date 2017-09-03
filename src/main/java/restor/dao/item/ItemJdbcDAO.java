@@ -1,6 +1,7 @@
 package restor.dao.item;
 
-import java.sql.DriverManager;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -23,14 +24,13 @@ public class ItemJdbcDAO extends RestorDAO<Item> implements IItemDAO {
 	private String fetchItem = "select * from item where id=?";
 	private String fetchMenuItems = "select * from item where menu_id=?";
 	private String fetchOrderItems = "select * from item where order_id=?";
-
 	private List<Item> items;
-	private Item item;
 
 	@Override
 	public Item update(Item dto) {
+		Connection con = getConnection();
 		try {
-			ps = con.prepareStatement(update);
+			PreparedStatement ps = con.prepareStatement(update);
 			ps.setInt(1, dto.getMenu_id());
 			ps.setInt(2, dto.getOrder_id());
 			ps.setString(3, dto.getDescription());
@@ -43,7 +43,13 @@ public class ItemJdbcDAO extends RestorDAO<Item> implements IItemDAO {
 			} else {
 				System.out.println("not Updated");
 			}
+			con.close();
 		} catch (Exception e) {
+			try {
+				con.close();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
 			e.printStackTrace();
 		}
 		return dto;
@@ -51,8 +57,9 @@ public class ItemJdbcDAO extends RestorDAO<Item> implements IItemDAO {
 
 	@Override
 	public Item delete(Item dto) {
+		Connection con = getConnection();
 		try {
-			ps = con.prepareStatement(delete);
+			PreparedStatement ps = getConnection().prepareStatement(delete);
 			ps.setInt(1, dto.getId());
 			int i = ps.executeUpdate();
 			if (i != 0) {
@@ -60,6 +67,7 @@ public class ItemJdbcDAO extends RestorDAO<Item> implements IItemDAO {
 			} else {
 				System.out.println("not deleted");
 			}
+			con.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -68,8 +76,9 @@ public class ItemJdbcDAO extends RestorDAO<Item> implements IItemDAO {
 
 	@Override
 	public Item insert(Item dto) {
+		Connection con = getConnection();
 		try {
-			ps = con.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
+			PreparedStatement ps = getConnection().prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
 			ps.setInt(1, dto.getMenu_id());
 			ps.setInt(2, dto.getOrder_id());
 			ps.setString(3, dto.getDescription());
@@ -85,6 +94,7 @@ public class ItemJdbcDAO extends RestorDAO<Item> implements IItemDAO {
 			rs.next();
 			int auto_id = rs.getInt(1);
 			dto.setId(auto_id);
+			con.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -93,11 +103,13 @@ public class ItemJdbcDAO extends RestorDAO<Item> implements IItemDAO {
 
 	@Override
 	public List<Item> fetchItems() {
+		Connection con = getConnection();
 		try {
-			ps = con.prepareStatement(fetchItems);
+			PreparedStatement ps = con.prepareStatement(fetchItems);
 			ResultSet rs = ps.executeQuery();
 			items = new ArrayList<>();
 			while (rs.next()) {
+				Item item = null;
 				int id = rs.getInt(1);
 				int menu_id = rs.getInt(2);
 				int order_id = rs.getInt(3);
@@ -111,6 +123,7 @@ public class ItemJdbcDAO extends RestorDAO<Item> implements IItemDAO {
 				item.setPrice(price);
 				items.add(item);
 			}
+			con.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -119,8 +132,10 @@ public class ItemJdbcDAO extends RestorDAO<Item> implements IItemDAO {
 
 	@Override
 	public List<Item> fetchOrderItems(int dto_id) {
+		Connection con = getConnection();
+		 Item item=null;
 		try {
-			ps = con.prepareStatement(fetchOrderItems);
+			PreparedStatement ps = con.prepareStatement(fetchOrderItems);
 			ps.setInt(1, dto_id);
 			ResultSet rs = ps.executeQuery();
 			items = new ArrayList<>();
@@ -138,6 +153,7 @@ public class ItemJdbcDAO extends RestorDAO<Item> implements IItemDAO {
 				item.setPrice(price);
 				items.add(item);
 			}
+			con.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -146,8 +162,10 @@ public class ItemJdbcDAO extends RestorDAO<Item> implements IItemDAO {
 
 	@Override
 	public List<Item> fetchMenuItems(int dto_id) {
+		Connection con = getConnection();
+		 Item item=null;
 		try {
-			ps = con.prepareStatement(fetchMenuItems);
+			PreparedStatement ps = con.prepareStatement(fetchMenuItems);
 			ps.setInt(1, dto_id);
 			ResultSet rs = ps.executeQuery();
 			items = new ArrayList<>();
@@ -165,6 +183,7 @@ public class ItemJdbcDAO extends RestorDAO<Item> implements IItemDAO {
 				item.setPrice(price);
 				items.add(item);
 			}
+			con.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -173,11 +192,12 @@ public class ItemJdbcDAO extends RestorDAO<Item> implements IItemDAO {
 
 	@Override
 	public Item fetchItem(int dto_id) {
+		Connection con = getConnection();
+		Item item = null;
 		try {
-			ps = con.prepareStatement(fetchItem);
+			PreparedStatement ps = con.prepareStatement(fetchItem);
 			ps.setInt(1, dto_id);
 			ResultSet rs = ps.executeQuery();
-			items = new ArrayList<>();
 			while (rs.next()) {
 				int id = rs.getInt(1);
 				int menu_id = rs.getInt(2);
@@ -191,6 +211,7 @@ public class ItemJdbcDAO extends RestorDAO<Item> implements IItemDAO {
 				item.setOrder_id(order_id);
 				item.setPrice(price);
 			}
+			con.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

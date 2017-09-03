@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 import restor.dto.order.Order;
-@Component
 public  class Client {
 	private int id;
 	private String name;

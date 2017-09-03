@@ -41,6 +41,24 @@ public interface IMenuService {
 	 * @return List<Item>
 	 */
 	List<Item>fetchItems(int dto_id);
+	/**
+	 * Add Items to Menu
+	 * @param List<Item>
+	 * @return
+	 */
+	List<Item> addItems(List<Item>dtos);
+	/**
+	 * Deletes Item from Menu
+	 * @param List<Item>
+	 * @return updated items
+	 */
+	List<Item>deleteItems(List<Item>dtos);
+	/**
+	 * Update Menu Items
+	 * @paramList<Item>
+	 * @return updated items
+	 */
+	List<Item>updateItems(List<Item>dtos);
 	
 	
 }

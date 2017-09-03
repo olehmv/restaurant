@@ -1,8 +1,8 @@
 package restor.dao.menu;
 
-import java.sql.DriverManager;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,9 +10,8 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 import restor.dao.RestorDAO;
-import restor.dto.item.Item;
-import restor.dto.item.MenuItem;
 import restor.dto.menu.Menu;
+import restor.exception.MenuNotFoundException;
 
 @Component
 public class MenuJdbcDAO extends RestorDAO<Menu> implements IMenuDAO {
@@ -21,13 +20,13 @@ public class MenuJdbcDAO extends RestorDAO<Menu> implements IMenuDAO {
 	private String delete = "delete from menu where id=?";
 	private String fetchMenus = "select * from menu";
 	private String fetchMenu = "select * from menu where id=?";
-	private Menu menu;
 	private List<Menu> menus;
 
 	@Override
 	public Menu update(Menu dto) {
+		Connection con = getConnection();
 		try {
-			ps = con.prepareStatement(update);
+			PreparedStatement ps = con.prepareStatement(update);
 			ps.setString(1, dto.getDescription());
 			ps.setInt(2, dto.getId());
 
@@ -37,6 +36,7 @@ public class MenuJdbcDAO extends RestorDAO<Menu> implements IMenuDAO {
 			} else {
 				System.out.println("not Updated");
 			}
+			con.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -45,8 +45,9 @@ public class MenuJdbcDAO extends RestorDAO<Menu> implements IMenuDAO {
 
 	@Override
 	public Menu delete(Menu dto) {
+		Connection con = getConnection();
 		try {
-			ps = con.prepareStatement(delete);
+			PreparedStatement ps = con.prepareStatement(delete);
 			ps.setInt(1, dto.getId());
 			int i = ps.executeUpdate();
 			if (i != 0) {
@@ -54,6 +55,7 @@ public class MenuJdbcDAO extends RestorDAO<Menu> implements IMenuDAO {
 			} else {
 				System.out.println("not deleted");
 			}
+			con.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -62,9 +64,9 @@ public class MenuJdbcDAO extends RestorDAO<Menu> implements IMenuDAO {
 
 	@Override
 	public Menu insert(Menu dto) {
+		Connection con = getConnection();
 		try {
-
-			ps = con.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
+			PreparedStatement ps = con.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
 			ps.setString(1, dto.getDescription());
 			ResultSet rs = ps.getGeneratedKeys();
 			int i = ps.executeUpdate();
@@ -77,6 +79,7 @@ public class MenuJdbcDAO extends RestorDAO<Menu> implements IMenuDAO {
 			rs.next();
 			int auto_id = rs.getInt(1);
 			dto.setId(auto_id);
+			con.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -85,11 +88,12 @@ public class MenuJdbcDAO extends RestorDAO<Menu> implements IMenuDAO {
 
 	@Override
 	public Menu fetchMenu(int dto_id) {
+		Menu menu = null;
+		Connection con = getConnection();
 		try {
-			ps = con.prepareStatement(fetchMenu);
+			PreparedStatement ps = con.prepareStatement(fetchMenu);
 			ps.setInt(1, dto_id);
 			ResultSet rs = ps.executeQuery();
-			menus = new ArrayList<>();
 			while (rs.next()) {
 				int id = rs.getInt(1);
 				String description = rs.getString(2);
@@ -97,6 +101,7 @@ public class MenuJdbcDAO extends RestorDAO<Menu> implements IMenuDAO {
 				menu.setDescription(description);
 				menu.setId(id);
 			}
+			con.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -105,8 +110,10 @@ public class MenuJdbcDAO extends RestorDAO<Menu> implements IMenuDAO {
 
 	@Override
 	public List<Menu> fetchMenus() {
+		Menu menu = null;
+		Connection con = getConnection();
 		try {
-			ps = con.prepareStatement(fetchMenus);
+			PreparedStatement ps = con.prepareStatement(fetchMenus);
 			ResultSet rs = ps.executeQuery();
 			menus = new ArrayList<>();
 			while (rs.next()) {
@@ -117,6 +124,7 @@ public class MenuJdbcDAO extends RestorDAO<Menu> implements IMenuDAO {
 				menu.setId(id);
 				menus.add(menu);
 			}
+			con.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

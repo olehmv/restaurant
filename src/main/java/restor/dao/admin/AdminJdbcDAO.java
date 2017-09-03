@@ -1,8 +1,8 @@
 package restor.dao.admin;
 
-import java.sql.DriverManager;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import restor.dao.RestorDAO;
 import restor.dto.admin.Admin;
+
 @Component
 public class AdminJdbcDAO extends RestorDAO<Admin> implements IAdminDAO {
 	private String insert = "insert into admin (name) values(?);";
@@ -18,37 +19,13 @@ public class AdminJdbcDAO extends RestorDAO<Admin> implements IAdminDAO {
 	private String delete = "delete from admin where id=?";
 	private String fetchAdmins = "select * from admin";
 	private String fetchAdmin = "select * from admin where id=?";
-	// delete static after test
-	private static List<Admin> admins;
-	// delete static after test
-	private static Admin admin;
-
-//	public static void main(String[] args) {
-//		try {
-//			Class.forName("com.mysql.jdbc.Driver").newInstance();
-//			String url = "jdbc:mysql://localhost/restaurant";
-//			con = DriverManager.getConnection(url, "root", "");
-//			IAdminDAO dao = new AdminJdbcDAO();
-//			Admin a = dao.fetchAdmin(1);
-//			System.out.println(a);
-//			List<Admin> adms = dao.fetchAdmins();
-//			System.out.println(adms);
-//			con.close();
-//		} catch (ClassNotFoundException ex) {
-//			System.err.println(ex.getMessage());
-//		} catch (IllegalAccessException ex) {
-//			System.err.println(ex.getMessage());
-//		} catch (InstantiationException ex) {
-//			System.err.println(ex.getMessage());
-//		} catch (SQLException ex) {
-//			System.err.println(ex.getMessage());
-//		}
-//	}
+	private List<Admin> admins;
 
 	@Override
 	public Admin update(Admin dto) {
+		Connection con = getConnection();
 		try {
-			ps = con.prepareStatement(update);
+			PreparedStatement ps = con.prepareStatement(update);
 			ps.setString(1, dto.getName());
 			ps.setInt(2, dto.getId());
 
@@ -58,6 +35,7 @@ public class AdminJdbcDAO extends RestorDAO<Admin> implements IAdminDAO {
 			} else {
 				System.out.println("not Updated");
 			}
+			con.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -66,8 +44,9 @@ public class AdminJdbcDAO extends RestorDAO<Admin> implements IAdminDAO {
 
 	@Override
 	public Admin delete(Admin dto) {
+		Connection con = getConnection();
 		try {
-			ps = con.prepareStatement(delete);
+			PreparedStatement ps = con.prepareStatement(delete);
 			ps.setInt(1, dto.getId());
 			int i = ps.executeUpdate();
 			if (i != 0) {
@@ -75,6 +54,7 @@ public class AdminJdbcDAO extends RestorDAO<Admin> implements IAdminDAO {
 			} else {
 				System.out.println("not deleted");
 			}
+			con.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -83,9 +63,9 @@ public class AdminJdbcDAO extends RestorDAO<Admin> implements IAdminDAO {
 
 	@Override
 	public Admin insert(Admin dto) {
-
+		Connection con = getConnection();
 		try {
-			ps = con.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
+			PreparedStatement ps = con.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
 			ps.setString(1, dto.getName());
 
 			ResultSet rs = ps.getGeneratedKeys();
@@ -100,6 +80,7 @@ public class AdminJdbcDAO extends RestorDAO<Admin> implements IAdminDAO {
 			rs.next();
 			int auto_id = rs.getInt(1);
 			dto.setId(auto_id);
+			con.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -108,8 +89,10 @@ public class AdminJdbcDAO extends RestorDAO<Admin> implements IAdminDAO {
 
 	@Override
 	public Admin fetchAdmin(int dto_id) {
+		Connection con = getConnection();
+		Admin admin = null;
 		try {
-			ps = con.prepareStatement(fetchAdmin);
+			PreparedStatement ps = con.prepareStatement(fetchAdmin);
 			ps.setInt(1, dto_id);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
@@ -120,6 +103,7 @@ public class AdminJdbcDAO extends RestorDAO<Admin> implements IAdminDAO {
 				admin.setId(id);
 				admin.setName(name);
 			}
+			con.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -128,8 +112,10 @@ public class AdminJdbcDAO extends RestorDAO<Admin> implements IAdminDAO {
 
 	@Override
 	public List<Admin> fetchAdmins() {
+		Connection con = getConnection();
+		Admin admin = null;
 		try {
-			ps = con.prepareStatement(fetchAdmins);
+			PreparedStatement ps = con.prepareStatement(fetchAdmins);
 			ResultSet rs = ps.executeQuery();
 			admins = new ArrayList<>();
 			while (rs.next()) {
@@ -140,6 +126,7 @@ public class AdminJdbcDAO extends RestorDAO<Admin> implements IAdminDAO {
 				admin.setName(name);
 				admins.add(admin);
 			}
+			con.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

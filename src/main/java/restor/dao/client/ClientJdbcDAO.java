@@ -1,8 +1,8 @@
 package restor.dao.client;
 
-import java.sql.DriverManager;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import restor.dao.RestorDAO;
 import restor.dto.client.Client;
+
 @Component
 public class ClientJdbcDAO extends RestorDAO<Client> implements IClientDAO {
 	private String insert = "insert into client (name) values(?)";
@@ -19,14 +20,12 @@ public class ClientJdbcDAO extends RestorDAO<Client> implements IClientDAO {
 	private String fetchClient = "select * from client where id=?";
 	private String fetchClients = "select * from client";
 	private List<Client> clients;
-	private Client client;
-
 
 	@Override
 	public Client insert(Client dto) {
-
+		Connection con = getConnection();
 		try {
-			ps = con.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
+			PreparedStatement ps = con.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
 			ps.setString(1, dto.getName());
 
 			ResultSet rs = ps.getGeneratedKeys();
@@ -41,6 +40,7 @@ public class ClientJdbcDAO extends RestorDAO<Client> implements IClientDAO {
 			rs.next();
 			int auto_id = rs.getInt(1);
 			dto.setId(auto_id);
+			con.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -49,9 +49,9 @@ public class ClientJdbcDAO extends RestorDAO<Client> implements IClientDAO {
 
 	@Override
 	public Client update(Client dto) {
-
+		Connection con = getConnection();
 		try {
-			ps = con.prepareStatement(update);
+			PreparedStatement ps = con.prepareStatement(update);
 			ps.setString(1, dto.getName());
 			ps.setInt(2, dto.getId());
 
@@ -61,6 +61,7 @@ public class ClientJdbcDAO extends RestorDAO<Client> implements IClientDAO {
 			} else {
 				System.out.println("not Updated");
 			}
+			con.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -69,8 +70,9 @@ public class ClientJdbcDAO extends RestorDAO<Client> implements IClientDAO {
 
 	@Override
 	public Client delete(Client dto) {
+		Connection con = getConnection();
 		try {
-			ps = con.prepareStatement(delete);
+			PreparedStatement ps = con.prepareStatement(delete);
 			ps.setInt(1, dto.getId());
 			int i = ps.executeUpdate();
 			if (i != 0) {
@@ -78,6 +80,7 @@ public class ClientJdbcDAO extends RestorDAO<Client> implements IClientDAO {
 			} else {
 				System.out.println("not deleted");
 			}
+			con.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -86,8 +89,10 @@ public class ClientJdbcDAO extends RestorDAO<Client> implements IClientDAO {
 
 	@Override
 	public Client fetchClient(int dto_id) {
+		Connection con = getConnection();
+		Client client = null;
 		try {
-			ps = con.prepareStatement(fetchClient);
+			PreparedStatement ps = con.prepareStatement(fetchClient);
 			ps.setInt(1, dto_id);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
@@ -97,6 +102,7 @@ public class ClientJdbcDAO extends RestorDAO<Client> implements IClientDAO {
 				client.setId(id);
 				client.setName(name);
 			}
+			con.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -105,8 +111,10 @@ public class ClientJdbcDAO extends RestorDAO<Client> implements IClientDAO {
 
 	@Override
 	public List<Client> fetchClients() {
+		Client client = null;
+		Connection con = getConnection();
 		try {
-			ps = con.prepareStatement(fetchClients);
+			PreparedStatement ps = con.prepareStatement(fetchClients);
 			ResultSet rs = ps.executeQuery();
 			clients = new ArrayList<>();
 			while (rs.next()) {
@@ -117,6 +125,7 @@ public class ClientJdbcDAO extends RestorDAO<Client> implements IClientDAO {
 				client.setName(name);
 				clients.add(client);
 			}
+			con.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

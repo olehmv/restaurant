@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 import restor.dto.item.Item;
-@Component
 public  class Menu{
 	protected int id;
 	protected String description;

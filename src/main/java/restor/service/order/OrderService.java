@@ -2,13 +2,20 @@ package restor.service.order;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import restor.dao.order.IOderDAO;
+import restor.dao.item.IItemDAO;
+import restor.dao.order.IOrderDAO;
 import restor.dto.order.Order;
+
 @Component
-public class OrderService  implements IOrderService{
-	private IOderDAO orderDao;
+public class OrderService implements IOrderService {
+	@Autowired
+	private IOrderDAO orderDao;
+	@Autowired
+	private IItemDAO itemDao;
+
 	@Override
 	public Order addOrder(Order dto) {
 		return orderDao.save(dto);
@@ -26,12 +33,18 @@ public class OrderService  implements IOrderService{
 
 	@Override
 	public Order fetchOrder(int dto_id) {
-		return orderDao.fetchOrder(dto_id);
+		Order order = orderDao.fetchOrder(dto_id);
+		order.setOrderItems(itemDao.fetchOrderItems(dto_id));
+		return order;
 	}
 
 	@Override
 	public List<Order> fetchOrders() {
-		return orderDao.fetchOrders();
+		List<Order> orders = orderDao.fetchOrders();
+		for (Order order : orders) {
+			order.setOrderItems(itemDao.fetchOrderItems(order.getId()));
+		}
+		return orders;
 	}
 
 }

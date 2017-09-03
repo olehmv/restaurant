@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import restor.dto.item.IPrice;
 import restor.dto.item.Item;
 import restor.dto.order.Order;
-@Component
 public  class Admin implements IProcess, IPrice {
 	private int id;
 	protected String name;

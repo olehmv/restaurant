@@ -1,8 +1,5 @@
 package restor.dto.item;
 
-import org.springframework.stereotype.Component;
-
-@Component
 public  class Item implements IPrice{
 	protected int id;
 	protected int order_id;
@@ -60,6 +57,33 @@ public  class Item implements IPrice{
 	public double price() {
 		return price;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + id;
+		result = prime * result + order_id;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Item other = (Item) obj;
+		if (id != other.id)
+			return false;
+		if (order_id != other.order_id)
+			return false;
+		return true;
+	}
+
+	
 
 
 }

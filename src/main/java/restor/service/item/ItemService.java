@@ -2,12 +2,16 @@ package restor.service.item;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import restor.dao.item.IItemDAO;
 import restor.dto.item.Item;
+import restor.dto.menu.Menu;
+
 @Component
-public class ItemService implements IItemService{
+public class ItemService implements IItemService {
+	@Autowired
 	IItemDAO itemDao;
 
 	@Override
@@ -17,7 +21,10 @@ public class ItemService implements IItemService{
 
 	@Override
 	public Item fetchItem(int dto_id) {
-		return itemDao.fetchItem(dto_id);
+		Item dto = itemDao.fetchItem(dto_id);
+		if (dto == null)
+			return dto;
+		return dto;
 	}
 
 	@Override
