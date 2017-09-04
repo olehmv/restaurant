@@ -85,7 +85,8 @@ public class RestorRestController {
 
 	@RequestMapping(value = "/menus", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
 	public ResponseEntity<Menu> createMenu(@RequestBody Menu dto, UriComponentsBuilder builder) {
-		Menu entity = menuService.addMenu(dto);
+		dto = menuService.addMenu(dto);
+		Menu entity = menuService.fetchMenu(dto.getId());
 		HttpHeaders header = new HttpHeaders();
 		URI location = builder.path("/api/menus/").path(String.valueOf(entity.getId())).build().toUri();
 		header.setLocation(location);
@@ -96,7 +97,8 @@ public class RestorRestController {
 	@RequestMapping(value = "/items", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
 	public ResponseEntity<Item> createItem(@RequestBody Item dto, UriComponentsBuilder builder) {
 		dto.setOrder_id(0);
-		Item entity = itemService.addItem(dto);
+		dto = itemService.addItem(dto);
+		Item entity = itemService.fetchItem(dto.getId());
 		HttpHeaders header = new HttpHeaders();
 		URI location = builder.path("/api/items/").path(String.valueOf(entity.getId())).build().toUri();
 		System.err.println(location.toString());
@@ -113,7 +115,8 @@ public class RestorRestController {
 		if (entity == null) {
 			throw new MenuNotFoundException();
 		}
-		entity = menuService.updateMenu(dto);
+		menuService.updateMenu(dto);
+		entity = menuService.fetchMenu(dto_id);
 		return entity;
 	}
 
@@ -125,7 +128,8 @@ public class RestorRestController {
 		if (entity == null) {
 			throw new ItemNotFoundException();
 		}
-		entity = itemService.updateItem(dto);
+		dto = itemService.updateItem(dto);
+		entity = itemService.fetchItem(dto_id);
 		return entity;
 	}
 
@@ -136,7 +140,8 @@ public class RestorRestController {
 		if (dto == null) {
 			throw new MenuNotFoundException();
 		}
-		return menuService.deleteMenu(dto);
+		menuService.deleteMenu(dto);
+		return null;
 	}
 
 	@RequestMapping(value = "/items/{dto_id}", method = RequestMethod.DELETE)
@@ -148,7 +153,7 @@ public class RestorRestController {
 		} else {
 			dto = itemService.deleteItem(dto);
 		}
-		return dto;
+		return null;
 	}
 
 	@ResponseStatus(HttpStatus.NOT_FOUND)
@@ -286,7 +291,6 @@ public class RestorRestController {
 		return list;
 	}
 
-
 	@RequestMapping(value = "/orders/{dto_id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseStatus(HttpStatus.OK)
 	public Order showOrder(@PathVariable int dto_id) {
@@ -307,8 +311,6 @@ public class RestorRestController {
 		return response;
 	}
 
-
-
 	@RequestMapping(value = "/orders/{dto_id}", method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
 	@ResponseStatus(HttpStatus.OK)
 	public Order updateOrder(@PathVariable int dto_id, @RequestBody Order dto) {
@@ -321,7 +323,6 @@ public class RestorRestController {
 		return orderService.fetchOrder(dto_id);
 	}
 
-	
 	@RequestMapping(value = "/orders/{dto_id}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
 	public Order deleteOrder(@PathVariable int dto_id) {
@@ -329,11 +330,10 @@ public class RestorRestController {
 		if (dto == null) {
 			throw new OrderNotFoundException();
 		} else {
-			dto=orderService.deleteOrder(dto);
+			dto = orderService.deleteOrder(dto);
 		}
 		return dto;
 	}
-
 
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	@ExceptionHandler(OrderNotFoundException.class)

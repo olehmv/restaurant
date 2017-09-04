@@ -20,7 +20,8 @@ public class MenuService implements IMenuService {
 	@Override
 	public Menu fetchMenu(int dto_id) {
 		Menu dto = menuDao.fetchMenu(dto_id);
-		if(dto==null)return dto;
+		if (dto == null)
+			return dto;
 		List<Item> items = fetchItems(dto_id);
 		dto.setMenuItems(items);
 		return dto;
@@ -49,7 +50,7 @@ public class MenuService implements IMenuService {
 
 	@Override
 	public Menu updateMenu(Menu dto) {
-		 Menu updated = menuDao.update(dto);
+		Menu updated = menuDao.update(dto);
 		List<Item> updateItems = updateItems(dto.getMenuItems());
 		updated.setMenuItems(updateItems);
 		return updated;
@@ -59,6 +60,8 @@ public class MenuService implements IMenuService {
 	public List<Menu> fetchMenus() {
 		List<Menu> menus = menuDao.fetchMenus();
 		for (Menu menu : menus) {
+			if (menu == null)
+				return menus;
 			menu.setMenuItems(fetchItems(menu.getId()));
 		}
 		return menus;
@@ -80,8 +83,7 @@ public class MenuService implements IMenuService {
 	@Override
 	public List<Item> deleteItems(List<Item> dtos) {
 		for (Item dto : dtos) {
-			dto.setMenu_id(0);
-			dto = itemDao.update(dto);
+			dto = itemDao.delete(dto);
 		}
 		return dtos;
 	}

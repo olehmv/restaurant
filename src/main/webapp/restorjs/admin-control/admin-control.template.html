@@ -1,0 +1,109 @@
+<div class="">
+	<div class="">
+		<li style="color: red">{{$ctrl.error.data.ex}}</li>
+	</div>
+	<div class="">
+		<h3>Select admin</h3>
+		<div class="">
+			<select
+				ng-options="admin as admin.name for admin in $ctrl.admins track by admin.id"
+				ng-model="$ctrl.admin"></select>
+		</div>
+	</div>
+	<div class="">
+		<h3>Select menu</h3>
+		<div class="">
+			<select
+				ng-options="menu as menu.description  for menu in $ctrl.menus track by menu.id"
+				ng-model="$ctrl.menu"></select>
+		</div>
+	</div>
+
+
+	<div class="">
+		<div class="">
+			<form ng-submit="$ctrl.addClient()" class="">
+				<div class="">
+					<div class="">
+						<label class="">New Client</label>
+						<div class="">
+							<input type="text" ng-model="$ctrl.client.name" class=""
+								placeholder="Enter  name" />
+						</div>
+					</div>
+				</div>
+				<div class="">
+					<div class="">
+						<input type="submit" value="Submit">
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div class="">
+		<h3>Client</h3>
+		<li>id: {{ $ctrl.newClient.id}}</li>
+		<li>name: {{ $ctrl.newClient.name}}</li>
+	</div>
+	<h3>Order</h3>
+	<li>id: {{ $ctrl.admin.newOrder.id}}</li>
+	<li>admin_id: {{ $ctrl.admin.newOrder.admin_id}}</li>
+	<li>client_id: {{ $ctrl.admin.newOrder.client_id}}</li>
+	<li>description: {{ $ctrl.admin.newOrder.description}}</li>
+	<li>price: {{ $ctrl.admin.newOrder.price}}</li>
+	<div class="">
+		<div class="">
+			<form ng-submit="$ctrl.submit()" class="">
+				<div class="">
+					<div class="">
+						<label class="">New Order</label>
+						<div class="">
+							<input type="text" ng-model="$ctrl.admin.order.description"
+								class="" placeholder="Enter  description" />
+						</div>
+					</div>
+				</div>
+				<h3>Select item</h3>
+				<div class="">
+					<div class="">
+						<select
+							ng-options="item as item.description for item in $ctrl.menu.menuItems track by item.id"
+							ng-model="$ctrl.admin.order.item"></select>
+					</div>
+				</div>
+
+				<div class="">
+					<div class="">
+						<input type="submit" value="Submit Order">
+						<button type="button" ng-click="$ctrl.addItem()" class="">Add
+							Item</button>
+
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div>
+		<ul ng-repeat="item in $ctrl.admin.order.orderItems">
+			<h3>Item</h3>
+			<li>id: {{ item.id}}</li>
+			<li>order_id: {{ item.order_id}}</li>
+			<li>menu_id: {{ item.menu_id}}</li>
+			<li>description: {{ item.description}}</li>
+			<li>price: {{ item.price}}</li>
+			<div class="">
+				<button type="button" ng-click="$ctrl.deleteItem(item)" class="">Remove
+					Item</button>
+			</div>
+		</ul>
+		<ul ng-repeat="item in $ctrl.admin.newOrder.orderItems">
+			<h3>Item</h3>
+			<li>id: {{ item.id}}</li>
+			<li>order_id: {{ item.order_id}}</li>
+			<li>menu_id: {{ item.menu_id}}</li>
+			<li>description: {{ item.description}}</li>
+			<li>price: {{ item.price}}</li>
+
+		</ul>
+	</div>
+</div>

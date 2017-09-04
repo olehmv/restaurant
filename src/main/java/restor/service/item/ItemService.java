@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 import restor.dao.item.IItemDAO;
 import restor.dto.item.Item;
-import restor.dto.menu.Menu;
 
 @Component
 public class ItemService implements IItemService {

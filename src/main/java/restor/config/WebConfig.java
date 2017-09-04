@@ -3,7 +3,6 @@ package restor.config;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -19,7 +18,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 @Configuration
 @EnableWebMvc
 @ComponentScan("restor")
-public class WebConfig extends WebMvcConfigurerAdapter{
+public class WebConfig extends WebMvcConfigurerAdapter {
 	@Override
 	public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
 		Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
@@ -30,11 +29,10 @@ public class WebConfig extends WebMvcConfigurerAdapter{
 		MappingJackson2HttpMessageConverter messageConverter = new MappingJackson2HttpMessageConverter(builder.build());
 		converters.add(messageConverter);
 	}
+
 	@Override
 	public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
 		configurer.enable();
 	}
 
-	
-	
 }

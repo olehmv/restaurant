@@ -38,13 +38,7 @@ public class OrderJdbcDAO extends RestorDAO<Order> implements IOrderDAO {
 			ps.setInt(4, dto.getClient_id());
 			ps.setBoolean(5, dto.isActive());
 			ps.setInt(6, dto.getId());
-
-			int i = ps.executeUpdate();
-			if (i != 0) {
-				System.out.println("Updated");
-			} else {
-				System.out.println("not Updated");
-			}
+			ps.executeUpdate();
 			con.close();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -58,12 +52,7 @@ public class OrderJdbcDAO extends RestorDAO<Order> implements IOrderDAO {
 		try {
 			PreparedStatement ps = con.prepareStatement(delete);
 			ps.setInt(1, dto.getId());
-			int i = ps.executeUpdate();
-			if (i != 0) {
-				System.out.println("deleted");
-			} else {
-				System.out.println("not deleted");
-			}
+			ps.executeUpdate();
 			con.close();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -81,15 +70,8 @@ public class OrderJdbcDAO extends RestorDAO<Order> implements IOrderDAO {
 			ps.setInt(3, dto.getAdmin_id());
 			ps.setInt(4, dto.getClient_id());
 			ps.setBoolean(5, dto.isActive());
-
 			ResultSet rs = ps.getGeneratedKeys();
-
-			int i = ps.executeUpdate();
-			if (i != 0) {
-				System.out.println("Inserted");
-			} else {
-				System.out.println("not Inserted");
-			}
+			ps.executeUpdate();
 			rs = ps.getGeneratedKeys();
 			rs.next();
 			int auto_id = rs.getInt(1);
@@ -103,7 +85,7 @@ public class OrderJdbcDAO extends RestorDAO<Order> implements IOrderDAO {
 
 	@Override
 	public List<Order> fetchOrders() {
-		Order order=null;
+		Order order = null;
 		Connection con = getConnection();
 		try {
 			PreparedStatement ps = con.prepareStatement(fetchOrders);
@@ -134,7 +116,7 @@ public class OrderJdbcDAO extends RestorDAO<Order> implements IOrderDAO {
 
 	@Override
 	public Order fetchOrder(int dto_id) {
-		Order order=null;
+		Order order = null;
 		Connection con = getConnection();
 		try {
 			PreparedStatement ps = con.prepareStatement(fetchOrder);
@@ -164,7 +146,7 @@ public class OrderJdbcDAO extends RestorDAO<Order> implements IOrderDAO {
 
 	@Override
 	public List<Order> fetchAdminOrders(int dto_id) {
-		Order order=null;
+		Order order = null;
 		Connection con = getConnection();
 		try {
 			PreparedStatement ps = con.prepareStatement(fetchAdminOrders);
@@ -196,7 +178,7 @@ public class OrderJdbcDAO extends RestorDAO<Order> implements IOrderDAO {
 
 	@Override
 	public List<Order> fetchClientOrders(int dto_id) {
-		Order order=null;
+		Order order = null;
 		Connection con = getConnection();
 		try {
 			PreparedStatement ps = con.prepareStatement(fetchClientOrders);

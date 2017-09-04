@@ -1,6 +1,5 @@
 package restor.service.client;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +8,6 @@ import org.springframework.stereotype.Component;
 import restor.dao.client.IClientDAO;
 import restor.dao.item.IItemDAO;
 import restor.dao.order.IOrderDAO;
-import restor.dto.admin.Admin;
 import restor.dto.client.Client;
 import restor.dto.item.Item;
 import restor.dto.order.Order;
@@ -25,9 +23,13 @@ public class ClientService implements IClientService {
 
 	@Override
 	public Client addClient(Client dto) {
-		List<Order> orders = dto.getOrders();
+		List<Order> orders = dto.getClientOrders();
 		dto = clientDao.save(dto);
+		if (orders == null)
+			return dto;
 		for (Order order : orders) {
+			if (order == null)
+				continue;
 			List<Item> items = order.getOrderItems();
 			order.setClient_id(dto.getId());
 			order = orderDao.save(order);
@@ -36,14 +38,17 @@ public class ClientService implements IClientService {
 				item = itemDao.save(item);
 			}
 			order.setOrderItems(items);
+			order.process();
+			orderDao.update(order);
+
 		}
-		dto.setOrders(orders);
+		dto.setClientOrders(orders);
 		return dto;
 	}
 
 	@Override
 	public Client updateClient(Client dto) {
-		List<Order> orders = dto.getOrders();
+		List<Order> orders = dto.getClientOrders();
 		dto = clientDao.update(dto);
 		for (Order order : orders) {
 			List<Item> items = order.getOrderItems();
@@ -62,8 +67,10 @@ public class ClientService implements IClientService {
 				}
 			}
 			order.setOrderItems(items);
+			order.process();
+			orderDao.update(order);
 		}
-		dto.setOrders(orders);
+		dto.setClientOrders(orders);
 		return dto;
 	}
 
@@ -79,7 +86,8 @@ public class ClientService implements IClientService {
 
 	private boolean isItemNew(Item item) {
 		Item fetchItem = itemDao.fetchItem(item.getId());
-		if(fetchItem==null)return true;
+		if (fetchItem == null)
+			return true;
 		if (!fetchItem.equals(item))
 			return true;
 		return false;
@@ -102,14 +110,8 @@ public class ClientService implements IClientService {
 	@Override
 	public Client fetchClient(int dto_id) {
 		Client dto = clientDao.fetchClient(dto_id);
-		if (dto == null)
-			return dto;
 		List<Order> orders = fetchOrders(dto_id);
-		for (Order order : orders) {
-			List<Item> items = itemDao.fetchOrderItems(order.getId());
-			order.setOrderItems(items);
-		}
-		dto.setOrders(orders);
+		dto.setClientOrders(orders);
 		return dto;
 	}
 
@@ -118,18 +120,23 @@ public class ClientService implements IClientService {
 		List<Client> clients = clientDao.fetchClients();
 		for (Client client : clients) {
 			List<Order> orders = fetchOrders(client.getId());
-			for (Order order : orders) {
-				List<Item> items = itemDao.fetchOrderItems(order.getId());
-				order.setOrderItems(items);
-			}
-			client.setOrders(orders);
+			client.setClientOrders(orders);
 		}
 		return clients;
 	}
 
 	@Override
 	public List<Order> fetchOrders(int dto_id) {
-		return orderDao.fetchClientOrders(dto_id);
+		List<Order> orders = orderDao.fetchClientOrders(dto_id);
+		for (Order order : orders) {
+			if (order == null)
+				continue;
+			List<Item> items = itemDao.fetchOrderItems(order.getId());
+			order.setOrderItems(items);
+			order.process();
+			orderDao.update(order);
+		}
+		return orders;
 	}
 
 }

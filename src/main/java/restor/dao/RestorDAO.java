@@ -1,7 +1,6 @@
 package restor.dao;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

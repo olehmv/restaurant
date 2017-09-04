@@ -21,27 +21,33 @@ public class OrderService implements IOrderService {
 	public Order addOrder(Order dto) {
 		List<Item> items = dto.getOrderItems();
 		dto = orderDao.save(dto);
+		if (items == null)
+			return dto;
 		for (Item item : items) {
+			if (item == null)
+				continue;
 			item.setOrder_id(dto.getId());
 			item = itemDao.save(item);
 		}
 		dto.setOrderItems(items);
+		dto.process();
+		orderDao.update(dto);
 		return dto;
 	}
 
 	@Override
 	public Order updateOrder(Order dto) {
-			List<Item> items = dto.getOrderItems();
-			dto = orderDao.update(dto);
-			for (Item item : items) {
-				item.setOrder_id(dto.getId());
-				if (isItemNew(item)) {
-					item = itemDao.save(item);
-				} else {
-					item = itemDao.update(item);
-				}
+		List<Item> items = dto.getOrderItems();
+		dto = orderDao.update(dto);
+		for (Item item : items) {
+			item.setOrder_id(dto.getId());
+			if (isItemNew(item)) {
+				item = itemDao.save(item);
+			} else {
+				item = itemDao.update(item);
 			}
-			dto.setOrderItems(items);
+		}
+		dto.setOrderItems(items);
 		return dto;
 	}
 
@@ -61,6 +67,8 @@ public class OrderService implements IOrderService {
 		if (dto == null)
 			return dto;
 		dto.setOrderItems(itemDao.fetchOrderItems(dto_id));
+		dto.process();
+		orderDao.update(dto);
 		return dto;
 	}
 
@@ -69,6 +77,8 @@ public class OrderService implements IOrderService {
 		List<Order> orders = orderDao.fetchOrders();
 		for (Order order : orders) {
 			order.setOrderItems(itemDao.fetchOrderItems(order.getId()));
+			order.process();
+			orderDao.update(order);
 		}
 		return orders;
 	}

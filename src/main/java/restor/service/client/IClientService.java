@@ -10,8 +10,9 @@ public interface IClientService {
 
 	/**
 	 * Update Client
+	 * 
 	 * @param Client
-	 * @return updated Client 
+	 * @return updated Client
 	 */
 	Client updateClient(Client dto);
 

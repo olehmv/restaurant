@@ -2,12 +2,9 @@ package restor.dto.order;
 
 import java.util.List;
 
-import org.springframework.stereotype.Component;
 
-import restor.dto.admin.IProcess;
 import restor.dto.item.Item;
-@Component
-public class Order implements IProcess {
+public class Order implements IOrderProcess {
 
 	private int id;
 	private int admin_id;
@@ -16,6 +13,7 @@ public class Order implements IProcess {
 	private double price;
 	private boolean active;
 	private List<Item> orderItems;
+	private Item item;
 
 	public int getAdmin_id() {
 		return admin_id;
@@ -33,11 +31,6 @@ public class Order implements IProcess {
 		this.description = description;
 	}
 
-	public double price() {
-		
-		return 0;
-	}
-
 	public List<Item> getOrderItems() {
 		return orderItems;
 	}
@@ -47,9 +40,12 @@ public class Order implements IProcess {
 	}
 
 	@Override
-	public Order process(String description, List<Item> items) {
-		for (Item item : items) {
-			setPrice(getPrice() + item.price());
+	public Order process() {
+		setPrice(0);
+		for (Item item : orderItems) {
+			if (item == null)
+				continue;
+			setPrice(getPrice() + item.getPrice());
 		}
 		return this;
 	}
@@ -113,6 +109,13 @@ public class Order implements IProcess {
 			return false;
 		return true;
 	}
-	
+
+	public Item getItem() {
+		return item;
+	}
+
+	public void setItem(Item item) {
+		this.item = item;
+	}
 
 }

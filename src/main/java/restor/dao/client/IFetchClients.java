@@ -6,5 +6,5 @@ import restor.dto.client.Client;
 
 public interface IFetchClients {
 
-	List<Client>fetchClients();
+	List<Client> fetchClients();
 }

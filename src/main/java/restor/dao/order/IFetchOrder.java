@@ -5,6 +5,7 @@ import restor.dto.order.Order;
 public interface IFetchOrder {
 	/**
 	 * fetch order from table
+	 * 
 	 * @param dto_id
 	 * @return Order
 	 */

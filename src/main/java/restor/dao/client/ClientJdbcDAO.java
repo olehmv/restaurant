@@ -27,15 +27,8 @@ public class ClientJdbcDAO extends RestorDAO<Client> implements IClientDAO {
 		try {
 			PreparedStatement ps = con.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
 			ps.setString(1, dto.getName());
-
 			ResultSet rs = ps.getGeneratedKeys();
-
-			int i = ps.executeUpdate();
-			if (i != 0) {
-				System.out.println("Inserted");
-			} else {
-				System.out.println("not Inserted");
-			}
+			ps.executeUpdate();
 			rs = ps.getGeneratedKeys();
 			rs.next();
 			int auto_id = rs.getInt(1);
@@ -54,13 +47,7 @@ public class ClientJdbcDAO extends RestorDAO<Client> implements IClientDAO {
 			PreparedStatement ps = con.prepareStatement(update);
 			ps.setString(1, dto.getName());
 			ps.setInt(2, dto.getId());
-
-			int i = ps.executeUpdate();
-			if (i != 0) {
-				System.out.println("Updated");
-			} else {
-				System.out.println("not Updated");
-			}
+			ps.executeUpdate();
 			con.close();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -74,12 +61,7 @@ public class ClientJdbcDAO extends RestorDAO<Client> implements IClientDAO {
 		try {
 			PreparedStatement ps = con.prepareStatement(delete);
 			ps.setInt(1, dto.getId());
-			int i = ps.executeUpdate();
-			if (i != 0) {
-				System.out.println("deleted");
-			} else {
-				System.out.println("not deleted");
-			}
+			ps.executeUpdate();
 			con.close();
 		} catch (Exception e) {
 			e.printStackTrace();

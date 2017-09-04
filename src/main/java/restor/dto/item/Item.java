@@ -1,6 +1,6 @@
 package restor.dto.item;
 
-public  class Item implements IPrice{
+public  class Item{
 	protected int id;
 	protected int order_id;
 	protected int menu_id;
@@ -53,10 +53,6 @@ public  class Item implements IPrice{
 				+ ", price=" + price + "]";
 	}
 
-	@Override
-	public double price() {
-		return price;
-	}
 
 	@Override
 	public int hashCode() {

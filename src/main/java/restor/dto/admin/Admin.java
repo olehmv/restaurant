@@ -2,15 +2,12 @@ package restor.dto.admin;
 
 import java.util.List;
 
-import org.springframework.stereotype.Component;
-
-import restor.dto.item.IPrice;
-import restor.dto.item.Item;
 import restor.dto.order.Order;
-public  class Admin implements IProcess, IPrice {
+
+public class Admin {
 	private int id;
 	protected String name;
-	protected List<Order> orders;
+	private List<Order> adminOrders;
 	private Order order;
 
 	public String getName() {
@@ -19,14 +16,6 @@ public  class Admin implements IProcess, IPrice {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public List<Order> getOrders() {
-		return orders;
-	}
-
-	public void setOrders(List<Order> orders) {
-		this.orders = orders;
 	}
 
 	public Order getOrder() {
@@ -50,16 +39,12 @@ public  class Admin implements IProcess, IPrice {
 		return "Admin [name=" + name + " id: " + id + "]";
 	}
 
-	@Override
-	public Order process(String description, List<Item> items) {
-		setOrder(getOrder().process(description, items));
-		getOrders().add(getOrder());
-		return getOrder();
+	public List<Order> getAdminOrders() {
+		return adminOrders;
 	}
 
-	@Override
-	public double price() {
-		return getOrder().getPrice();
+	public void setAdminOrders(List<Order> adminOrders) {
+		this.adminOrders = adminOrders;
 	}
 
 }

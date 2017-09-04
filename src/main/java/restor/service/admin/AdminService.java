@@ -10,7 +10,6 @@ import restor.dao.item.IItemDAO;
 import restor.dao.order.IOrderDAO;
 import restor.dto.admin.Admin;
 import restor.dto.item.Item;
-import restor.dto.menu.Menu;
 import restor.dto.order.Order;
 
 @Component
@@ -29,18 +28,21 @@ public class AdminService implements IAdminService {
 
 	@Override
 	public Admin updateAdmin(Admin dto) {
-		List<Order> orders = dto.getOrders();
+		List<Order> orders = dto.getAdminOrders();
 		for (Order order : orders) {
 			order = orderDao.update(order);
 			List<Item> orderItems = itemDao.fetchOrderItems(order.getId());
+			orderItems.addAll(order.getOrderItems());
 			order.setOrderItems(orderItems);
+			order.process();
+			orderDao.update(order);
 		}
 		return adminDao.update(dto);
 	}
 
 	@Override
 	public Admin deleteAdmin(Admin dto) {
-		List<Order> orders = dto.getOrders();
+		List<Order> orders = dto.getAdminOrders();
 		for (Order order : orders) {
 			order.setAdmin_id(0);
 			orderDao.update(order);
@@ -54,18 +56,21 @@ public class AdminService implements IAdminService {
 		if (dto == null)
 			return dto;
 		List<Order> orders = fetchOrders(dto_id);
-		for (Order order : orders) {
-			List<Item> items = itemDao.fetchOrderItems(order.getId());
-			order.setOrderItems(items);
-		}
-		dto.setOrders(orders);
+		dto.setAdminOrders(orders);
 		return dto;
 
 	}
 
 	@Override
 	public List<Order> fetchOrders(int dto_id) {
-		return orderDao.fetchAdminOrders(dto_id);
+		List<Order> orders = orderDao.fetchAdminOrders(dto_id);
+		for (Order order : orders) {
+			List<Item> items = itemDao.fetchOrderItems(order.getId());
+			order.setOrderItems(items);
+			order.process();
+			orderDao.update(order);
+		}
+		return orders;
 	}
 
 	@Override
@@ -73,11 +78,7 @@ public class AdminService implements IAdminService {
 		List<Admin> admins = adminDao.fetchAdmins();
 		for (Admin admin : admins) {
 			List<Order> orders = fetchOrders(admin.getId());
-			for (Order order : orders) {
-				List<Item> items = itemDao.fetchOrderItems(order.getId());
-				order.setOrderItems(items);
-			}
-			admin.setOrders(orders);
+			admin.setAdminOrders(orders);
 		}
 		return admins;
 	}
